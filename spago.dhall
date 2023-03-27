@@ -12,18 +12,18 @@ to generate this file without the comments in this block.
 -}
 { name = "my-project"
 , dependencies =
-  [ "arrays"
-  , "console"
+  [ "console"
   , "effect"
+  , "foreign"
+  , "foreign-object"
   , "functions"
-  , "integers"
   , "maybe"
   , "prelude"
-  , "strings"
+  , "record"
+  , "routing-duplex"
   , "tuples"
   , "unsafe-coerce"
   , "web-dom"
-  , "web-html"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]

@@ -8,7 +8,10 @@ import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Element)
 
 type Component props
-  = props -> Effect Element
+  = props -> Element
+
+type Children
+  = Array Element
 
 foreign import data Accessor :: Type -> Type
 
@@ -20,9 +23,16 @@ foreign import createEffect :: (Unit -> Effect Unit) -> Effect Unit
 
 foreign import createMemo :: forall a. (Unit -> a) -> Accessor a
 
-foreign import createComponent :: Effect Element -> Effect Element
+foreign import createComponent :: forall props. (props -> Element) -> Component props
 
-foreign import dynamic :: forall props. String -> props -> Element
+foreign import dynamic :: forall props. String -> props -> Children -> Element
+
+foreign import fragment :: Children -> Element
+
+type ModuleName
+  = String
+
+foreign import lazy :: ModuleName -> Element
 
 access :: forall a. Accessor a -> a
 access = unsafeCoerce runFn0

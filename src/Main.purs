@@ -1,27 +1,40 @@
 module Main where
 
-import Prelude
-import Data.Tuple.Nested ((/\))
-import Effect.Class.Console (logShow)
-import Effect.Console (log)
-import SolidJS.Basic (Component, access, createComponent, createEffect, createMemo, createSignal, render)
-import SolidJS.Basic.Dom (button, div_, text)
+import Prelude hiding (div)
+import Data.Generic.Rep (class Generic)
+import Routing.Duplex (RouteDuplex', path, root)
+import Routing.Duplex.Generic as G
+import SolidJS.Basic (Component, fragment, lazy)
+import SolidJS.Basic.Dom (div, text)
+import SolidJS.Basic.Router (route)
+import Unsafe.Coerce (unsafeCoerce)
+
+data Route
+  = Home
+  | About
+
+derive instance genericRoute :: Generic Route _
+
+routes :: RouteDuplex' Route
+routes =
+  root
+    $ G.sum
+        { "Home": G.noArgs
+        , "About": path "about" G.noArgs
+        }
 
 main :: Component { message :: String }
-main { message } =
-  createComponent do
-    (count /\ setCount) <-
-      createSignal 0
-    createEffect \_ -> do
-      logShow (access count)
-    pure
-      $ div_
-          [ text message
-          , button
-              { children:
-                  [ createMemo \_ -> (access count) + 1
-                  , count
-                  ]
-              , onClick: \_ -> setCount $ access count + 1
-              }
-          ]
+main _ =
+  fragment
+    [ route routes
+        { path: Home
+        , component: unsafeCoerce $ lazy "Home"
+        }
+    , route routes
+        { path: About
+        , component: testcomp
+        }
+    ]
+
+testcomp :: Component { message :: String }
+testcomp _ = div { className: "flex justify-center" } [ text "Shambala" ]
