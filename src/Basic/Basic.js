@@ -3,14 +3,31 @@ import {
   createSignal as _createSignal,
   createEffect as _createEffect,
   createMemo as _createMemo,
+  createResource as _cr,
   mergeProps,
   children,
-  lazy as lazy_
+  lazy as lzy
 } from 'solid-js';
 
 export const render = (componentFn) => (root) => () => _render(componentFn, root);
 
-export const createComponent = (comp) => (props) => _createComponent(comp, props)
+export const createComponent = (comp) => (props) => _createComponent(comp(), mergeProps({}, props));
+
+export const dynamic = (component) => (props) => (cs) =>
+  _createComponent(Dynamic, mergeProps({
+    component,
+    get children() {
+      return children(() => cs)
+    }
+  }, props))
+
+export const fragment = (children) => _createMemo(() => children);
+
+export const createResource_ = (resourceFn) => {
+  const [resource, mutRef] = _cr(resourceFn);
+
+  return { value0: resource, value1: mutRef };
+}
 
 export const createSignal = (initialValue) => () => {
   const [signal, setSignal] = _createSignal(initialValue);
@@ -21,13 +38,4 @@ export const createEffect = (effectFn) => () => _createEffect(() => effectFn()()
 
 export const createMemo = (memoFn) => _createMemo(() => memoFn());
 
-export const fragment = (children) => _createMemo(() => children);
-
-export const dynamic = (component) => (props) => (cs) =>
-  _createComponent(Dynamic, mergeProps({
-    component, get children() {
-      return children(() => cs)
-    }
-  }, props))
-
-export const lazy = (path) => () => lazy_(() => import(`../../output/Frontend.${path}/index.js`));
+export const lazy_ = (path) => () => lzy(() => import(`../../output/Frontend.${path}/index.js`));

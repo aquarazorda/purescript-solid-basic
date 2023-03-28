@@ -4,10 +4,9 @@ import Prelude hiding (div)
 import Data.Generic.Rep (class Generic)
 import Routing.Duplex (RouteDuplex', path, root)
 import Routing.Duplex.Generic as G
-import SolidJS.Basic (Component, fragment, lazy)
+import SolidJS.Basic (Component, access, fragment, lazy)
 import SolidJS.Basic.Dom (div, text)
-import SolidJS.Basic.Router (route)
-import Unsafe.Coerce (unsafeCoerce)
+import SolidJS.Basic.Router (route, lazyRoute)
 
 data Route
   = Home
@@ -28,7 +27,7 @@ main _ =
   fragment
     [ route routes
         { path: Home
-        , component: unsafeCoerce $ lazy "Home"
+        , lazy: lazyRoute "Home"
         }
     , route routes
         { path: About
@@ -37,4 +36,4 @@ main _ =
     ]
 
 testcomp :: Component { message :: String }
-testcomp _ = div { className: "flex justify-center" } [ text "Shambala" ]
+testcomp _ = div { className: "flex justify-center" } [ text "About" ]
