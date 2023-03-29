@@ -1,5 +1,4 @@
 // @refresh reload
-import { createComponent, Suspense } from "solid-js";
 import {
   useLocation,
   A,
@@ -12,12 +11,17 @@ import {
   Scripts,
   Title,
 } from "solid-start";
+
+import { lazy } from "solid-js";
 import "./root.css";
 
-import Component from "../output/Main/index.js";
+
+const Component = lazy(() => import("../output/Main/index.js"));
 
 export default function Root() {
   return <Component />
+  // return <div>hello</div>
+  // return createComponent(Component, {});
   // return (
   //   <Html lang="en" >
   //     <Head>
