@@ -17,8 +17,7 @@ import "./root.css";
 import Component from "../output/Main/index.js";
 
 export default function Root() {
-  // return <Component />
-  return createComponent(() => Component, {});
+  return <Component />
   // return (
   //   <Html lang="en" >
   //     <Head>
