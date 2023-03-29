@@ -23,9 +23,10 @@ to generate this file without the comments in this block.
   , "record"
   , "routing-duplex"
   , "tuples"
+  , "undefined-or"
   , "unsafe-coerce"
   , "web-dom"
-  , "undefined-or"
+  , "web-html"
   ]
 , packages = ./packages.dhall
 , sources = [ "purs/**/*.purs" ]

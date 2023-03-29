@@ -3,11 +3,14 @@ module SolidJS.Basic.Dom where
 import Prelude hiding (div)
 import Data.Maybe (Maybe, isJust)
 import Data.UndefinedOr (UndefinedOr)
-import SolidJS.Basic (Accessor, Children)
+import SolidJS.Basic (Accessor, Children, Component)
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Element)
 
-foreign import dynamic :: forall props children. String -> props -> children -> Element
+type PropsWithChildren props
+  = Record ( children :: Children | props )
+
+foreign import dynamic :: forall props component children. component -> props -> children -> Element
 
 text :: forall a. a -> Element
 text = unsafeCoerce
@@ -21,7 +24,7 @@ div_ children = div {} children
 button ∷ forall props. props -> Children → Element
 button = dynamic "button"
 
-foreign import show_ :: String
+foreign import show_ :: Component {}
 
 show :: forall a. Accessor a -> Element -> Element -> Element
 show when fallback = dynamic show_ { when, fallback }

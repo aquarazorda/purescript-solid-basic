@@ -15,6 +15,9 @@ import Web.DOM (Element)
 type Component props
   = props -> Element
 
+type ComponentWithChildren props
+  = props -> Children -> Element
+
 type Children
   = Array Element
 

@@ -8,6 +8,7 @@ import Routing.Duplex (RouteDuplex', path, root)
 import Routing.Duplex.Generic as G
 import SolidJS.Basic (Component, fragment)
 import SolidJS.Basic.Router (lazyRoute, route)
+import SolidJS.Basic.Start as S
 
 data Route
   = Home
@@ -23,8 +24,8 @@ routes =
         , "About": path "about" G.noArgs
         }
 
-default :: Component { message :: String }
-default _ =
+router :: Component {}
+router _ =
   fragment
     [ route routes
         { path: Home
@@ -34,4 +35,23 @@ default _ =
         { path: About
         , lazy: lazyRoute "About" Nothing
         }
+    ]
+
+default :: Component {}
+default _ =
+  S.html { lang: "en" }
+    [ S.head unit
+        [ S.title unit "SolidStart PureScript"
+        , S.meta { charset: "utf-8" }
+        , S.meta { name: "viewport", content: "width=device-width, initial-scale=1" }
+        ]
+    , S.body { class: "bg-slate-800" }
+        [ S.suspense {}
+            [ S.errorBoundary {}
+                [ S.routes {}
+                    [ router {} ]
+                ]
+            ]
+        , S.scripts
+        ]
     ]
