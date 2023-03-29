@@ -1,11 +1,10 @@
-import { createComponent as _createComponent, Dynamic, render as _render } from 'solid-js/web';
+import { createComponent as _createComponent, render as _render } from 'solid-js/web';
 import {
   createSignal as _createSignal,
   createEffect as _createEffect,
   createMemo as _createMemo,
   createResource as _cr,
   mergeProps,
-  children,
   lazy as lzy
 } from 'solid-js';
 
@@ -13,19 +12,11 @@ export const render = (componentFn) => (root) => () => _render(componentFn, root
 
 export const createComponent = (comp) => (props) => _createComponent(comp(), mergeProps({}, props));
 
-export const dynamic = (component) => (props) => (cs) =>
-  _createComponent(Dynamic, mergeProps({
-    component,
-    get children() {
-      return children(() => cs)
-    }
-  }, props))
-
 export const fragment = (children) => _createMemo(() => children);
 
-export const createResource_ = (resourceFn) => {
-  const [resource, mutRef] = _cr(resourceFn);
-
+export const createResource_ = (resourceFn) => () => {
+  const [resource, mutRef] = _cr(async () => await resourceFn());
+  
   return { value0: resource, value1: mutRef };
 }
 
@@ -34,7 +25,7 @@ export const createSignal = (initialValue) => () => {
   return { value0: signal, value1: (val) => setSignal(val) };
 };
 
-export const createEffect = (effectFn) => () => _createEffect(() => effectFn()());
+export const createEffect = (effectFn) => () => _createEffect(effectFn);
 
 export const createMemo = (memoFn) => _createMemo(() => memoFn());
 

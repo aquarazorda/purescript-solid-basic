@@ -1,12 +1,14 @@
 module SolidJS.Basic.Router where
 
 import Prelude
+import Control.Promise (Promise, fromAff)
+import Data.Maybe (Maybe(..))
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Prim.Row (class Union)
 import Record (modify)
 import Routing.Duplex (RouteDuplex', print)
-import SolidJS.Basic (Children, Component, Lazy, ModuleName)
+import SolidJS.Basic (Children, Component, Lazy, ModuleName, Resource)
 import Type.Proxy (Proxy(..))
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Element)
@@ -29,6 +31,6 @@ route ::
   RouteDuplex' route -> Record attrs -> Element
 route routes props = route_ $ modify (Proxy :: Proxy "path") (unsafeCoerce $ print routes) (unsafeCoerce props)
 
-foreign import lazyRoute :: forall a. ModuleName -> Lazy (Component a)
+foreign import lazyRoute :: forall a b. ModuleName -> Maybe (Resource b) -> Lazy (Component a)
 
 foreign import useRouteData :: forall a. Effect a

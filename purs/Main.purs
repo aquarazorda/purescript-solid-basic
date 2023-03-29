@@ -2,11 +2,12 @@ module Main where
 
 import Prelude hiding (div)
 import Data.Generic.Rep (class Generic)
+import Data.Maybe (Maybe(..))
+import Frontend.Routes.Home.Data (homeRouteData)
 import Routing.Duplex (RouteDuplex', path, root)
 import Routing.Duplex.Generic as G
-import SolidJS.Basic (Component, access, fragment, lazy)
-import SolidJS.Basic.Dom (div, text)
-import SolidJS.Basic.Router (route, lazyRoute)
+import SolidJS.Basic (Component, fragment)
+import SolidJS.Basic.Router (lazyRoute, route)
 
 data Route
   = Home
@@ -22,18 +23,15 @@ routes =
         , "About": path "about" G.noArgs
         }
 
-main :: Component { message :: String }
-main _ =
+default :: Component { message :: String }
+default _ =
   fragment
     [ route routes
         { path: Home
-        , lazy: lazyRoute "Home"
+        , lazy: lazyRoute "Home" (Just homeRouteData)
         }
     , route routes
         { path: About
-        , component: testcomp
+        , lazy: lazyRoute "About" Nothing
         }
     ]
-
-testcomp :: Component { message :: String }
-testcomp _ = div { className: "flex justify-center" } [ text "About" ]

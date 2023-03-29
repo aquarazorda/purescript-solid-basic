@@ -26,7 +26,8 @@ to generate this file without the comments in this block.
   , "tuples"
   , "unsafe-coerce"
   , "web-dom"
+  , "undefined-or"
   ]
 , packages = ./packages.dhall
-, sources = [ "src/**/*.purs", "test/**/*.purs" ]
+, sources = [ "purs/**/*.purs" ]
 }
