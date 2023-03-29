@@ -1,8 +1,7 @@
 module SolidJS.Basic.Router where
 
 import Prelude
-import Control.Promise (Promise, fromAff)
-import Data.Maybe (Maybe(..))
+import Data.Maybe (Maybe)
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Prim.Row (class Union)

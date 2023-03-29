@@ -1,7 +1,8 @@
 module SolidJS.Basic.Dom where
 
+import Prelude hiding (div)
 import Data.Maybe (Maybe, isJust)
-import Foreign (Foreign)
+import Data.UndefinedOr (UndefinedOr)
 import SolidJS.Basic (Accessor, Children)
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Element)
@@ -22,8 +23,13 @@ button = dynamic "button"
 
 foreign import show_ :: String
 
-showMaybe :: forall a. { when :: Maybe a, fallback :: Element } -> Array ((a -> Element)) -> Element
-showMaybe props = dynamic show_ props { when = isJust props.when }
+show :: forall a. Accessor a -> Element -> Element -> Element
+show when fallback = dynamic show_ { when, fallback }
 
-showAccessor :: forall a. { when :: Accessor (Maybe a), fallback :: Element } -> (a -> Element) -> Element
-showAccessor = dynamic show_
+foreign import toUndefined_ :: forall a. (Maybe a -> Boolean) -> Maybe a -> UndefinedOr a
+
+toUndefined :: forall a. Maybe a -> UndefinedOr a
+toUndefined = toUndefined_ isJust
+
+showMaybe :: forall a. Accessor (Maybe a) -> Element -> (a -> Element) -> Element
+showMaybe when fallback = dynamic show_ { when: toUndefined <$> when, fallback }

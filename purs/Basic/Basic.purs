@@ -37,7 +37,7 @@ instance applyAccessor :: Apply Accessor where
   apply f x = createMemo \_ -> access_ f $ access_ x
 
 instance bindAccessor :: Bind Accessor where
-  bind acc k = unsafeCoerce $ createMemo \_ -> k $ access_ acc
+  bind acc fn = unsafeCoerce $ createMemo \_ -> fn $ access_ acc
 
 instance applicativeAccessor :: Applicative Accessor where
   pure x = unsafeCoerce $ x
