@@ -1,4 +1,4 @@
-import { createComponent as _createComponent, render as _render } from 'solid-js/web';
+import { createComponent as _createComponent, Dynamic, render as _render } from 'solid-js/web';
 import {
   createSignal as _createSignal,
   createEffect as _createEffect,
@@ -12,7 +12,7 @@ export const render = (componentFn) => (root) => () => _render(componentFn, root
 
 export const createComponent = (comp) => (props) => _createComponent(comp(), mergeProps({}, props));
 
-export const fragment = (children) => _createMemo(() => children);
+export const fragment = (children) => () => children;
 
 export const createResource_ = (resourceFn) => () => {
   const [resource, mutRef] = _cr(async () => await resourceFn());

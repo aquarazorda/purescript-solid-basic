@@ -52,6 +52,6 @@ default _ =
                     [ router {} ]
                 ]
             ]
-        , S.scripts
+        , S.scripts unit
         ]
     ]

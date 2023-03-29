@@ -39,8 +39,8 @@ routes = dynamic routes_
 
 foreign import scripts_ :: Element
 
-scripts :: Element
-scripts = dynamic scripts_ {} []
+scripts :: Unit -> Element
+scripts _ = dynamic scripts_ {} []
 
 foreign import errorBoundary_ :: Element
 
