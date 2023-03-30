@@ -1,6 +1,6 @@
 module SolidJS.Basic.Dom where
 
-import Prelude hiding (div)
+import Prelude (($), (<$>))
 import Data.Maybe (Maybe, isJust)
 import Data.UndefinedOr (UndefinedOr)
 import SolidJS.Basic (Accessor, Children, Component)

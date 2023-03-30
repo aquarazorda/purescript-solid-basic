@@ -20,7 +20,7 @@ export const route_ = (props) => {
 export const lazyRoute = (path) => (dataFn) => {
   return ({
     component: import(`../../output/Frontend.Routes.${path}/index.js`),
-    data: dataFn?.value0 ? dataFn?.value0 : empty
+    data: dataFn
   });
 }
 
