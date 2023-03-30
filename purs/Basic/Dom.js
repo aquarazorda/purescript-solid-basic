@@ -14,7 +14,9 @@ export const dynamic = (component) => (props) => (cs) => {
 export const show_ = (props) => createComponent(Show, mergeProps(props, {
   get children() {
     if (typeof props.children === 'function') {
-      return (v) => props.children(v()) || null;
+      return (v) => {
+        return props.children(typeof v === 'function' ? v() : v) || null
+      };
     }
     return props.children || null;
   },

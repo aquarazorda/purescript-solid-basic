@@ -2,6 +2,7 @@ module Main where
 
 import Prelude hiding (div)
 import Data.Generic.Rep (class Generic)
+import Frontend.Routes.Home as HS
 import Frontend.Routes.Home.Data (homeRouteData)
 import Routing.Duplex (RouteDuplex', path, root)
 import Routing.Duplex.Generic as G
@@ -23,19 +24,18 @@ routes =
         , "About": path "about" G.noArgs
         }
 
-router :: Component {}
-router _ =
-  fragment
-    [ route routes
-        { path: Home
-        , lazy: lazyRoute "Home" homeRouteData
-        }
-    , route routes
-        { path: About
-        , lazy: lazyRoute "About" \_ -> unit
-        }
-    ]
-
+-- router :: Component {}
+-- router _ =
+--   fragment
+--     [ route routes
+--         { path: Home
+--         , lazy: lazyRoute "Home" homeRouteData
+--         }
+--     , route routes
+--         { path: About
+--         , lazy: lazyRoute "About" \_ -> unit
+--         }
+--     ]
 default :: Component {}
 default _ =
   S.html { lang: "en" }
@@ -48,7 +48,13 @@ default _ =
         [ S.suspense {}
             [ S.errorBoundary {}
                 [ S.routes {}
-                    [ router {} ]
+                    [ route routes
+                        { path: Home
+                        , component: HS.default
+                        , data: homeRouteData
+                        }
+                    ]
+                -- [ router {} ]
                 ]
             ]
         , S.scripts unit

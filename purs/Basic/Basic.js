@@ -14,8 +14,10 @@ export const createComponent = (comp) => (props) => _createComponent(comp(), mer
 
 export const fragment = (children) => () => children;
 
-export const createResource_ = (resourceFn) => {
-  const [resource, mutRef] = _cr(resourceFn);
+export const createResource_ = (nothing) => (resourceFn) => {
+  const [resource, mutRef] = _cr(resourceFn, {
+    initialValue: nothing
+  });
   
   return { value0: resource, value1: mutRef };
 }
@@ -27,6 +29,7 @@ export const createSignal = (initialValue) => () => {
 
 export const createEffect = (effectFn) => () => _createEffect(effectFn);
 
-export const createMemo = (memoFn) => _createMemo(() => memoFn());
+export const createMemo = (memoFn) => _createMemo(memoFn);
+export const createMemo_ = (memoFn) => () => _createMemo(memoFn);
 
 export const lazy_ = (path) => () => lzy(() => import(`../../output/Frontend.${path}/index.js`));
