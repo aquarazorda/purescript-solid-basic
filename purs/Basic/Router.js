@@ -9,14 +9,19 @@ export const route_ = (props) => {
       data: props.lazy.data
     });
   }
-  return createComponent(Route_, props);
+
+  return createComponent(Route_, {
+    path: props.path,
+    component: props.component,
+    data: props.data
+  });
 };
 
 export const lazyRoute = (path) => (dataFn) => {
   return ({
     component: import(`../../output/Frontend.Routes.${path}/index.js`),
-    data: dataFn?.value0 ? dataFn?.value0 : undefined 
+    data: dataFn?.value0 ? dataFn?.value0 : empty
   });
 }
 
-export const useRouteData = uRD;
+export const useRouteData_ = uRD;

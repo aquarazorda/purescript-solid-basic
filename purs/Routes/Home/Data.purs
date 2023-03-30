@@ -9,5 +9,5 @@ import Type.Proxy (Proxy(..))
 
 json_ = Proxy :: Proxy "json"
 
-homeRouteData :: Resource Foreign
-homeRouteData = createResource $ get json_ =<< fetch "https://jsonplaceholder.typicode.com/todos/1" { method: GET }
+homeRouteData :: Unit -> Resource Foreign
+homeRouteData _ = createResource $ get json_ =<< fetch "https://jsonplaceholder.typicode.com/todos/1" { method: GET }

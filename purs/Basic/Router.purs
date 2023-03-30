@@ -2,6 +2,7 @@ module SolidJS.Basic.Router where
 
 import Prelude
 import Data.Maybe (Maybe)
+import Data.UndefinedOr (UndefinedOr, fromUndefined)
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Prim.Row (class Union)
@@ -12,10 +13,13 @@ import Type.Proxy (Proxy(..))
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Element)
 
+type RouteData a
+  = Effect (Maybe a)
+
 type RouteProps route compProps routeData
   = ( path :: route
     , children :: Children
-    , data :: Aff routeData
+    , data :: Unit -> routeData
     -- , matchFilters :: Maybe (MatchFilters s)
     , component :: Component compProps
     , preload :: Effect Unit
@@ -32,4 +36,7 @@ route routes props = route_ $ modify (Proxy :: Proxy "path") (unsafeCoerce $ pri
 
 foreign import lazyRoute :: forall a b. ModuleName -> Maybe (Resource b) -> Lazy (Component a)
 
-foreign import useRouteData :: forall a. Effect a
+foreign import useRouteData_ :: forall a. Effect (UndefinedOr a)
+
+useRouteData :: forall a. RouteData a
+useRouteData = fromUndefined <$> useRouteData_

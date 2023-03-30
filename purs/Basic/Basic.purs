@@ -2,7 +2,7 @@ module SolidJS.Basic where
 
 import Prelude
 import Control.Promise (Promise, fromAff)
-import Data.Function.Uncurried (runFn0)
+import Data.Function.Uncurried (mkFn0, runFn0)
 import Data.Maybe (Maybe)
 import Data.Tuple (Tuple(..))
 import Data.Tuple.Nested ((/\))
@@ -43,7 +43,7 @@ instance bindAccessor :: Bind Accessor where
   bind acc fn = unsafeCoerce $ createMemo \_ -> fn $ access_ acc
 
 instance applicativeAccessor :: Applicative Accessor where
-  pure x = unsafeCoerce $ x
+  pure x = unsafeCoerce $ mkFn0 (\_ -> x)
 
 foreign import render :: Element -> Element -> Effect Unit
 
@@ -65,32 +65,23 @@ foreign import fragment :: Children -> Element
 --         , latest :: Accessor a
 --         }
 --       )
+type ResourceActions
+  = { mutate :: Effect Unit, refetch :: Effect Unit }
+
 type Resource' a
-  = Effect
-      ( Tuple (Accessor (UndefinedOr a))
-          ( { mutate :: (a -> a) -> Effect Unit
-            , refetch :: Unit -> Aff a
-            }
-          )
-      )
+  = Tuple (Accessor (UndefinedOr a)) ResourceActions
 
 type Resource a
-  = Effect
-      ( Tuple (Accessor (Maybe a))
-          ( { mutate :: (a -> a) -> Effect Unit
-            , refetch :: Unit -> Aff a
-            }
-          )
-      )
+  = Tuple (Accessor (Maybe a)) ResourceActions
 
 foreign import createResource_ :: forall a. Effect (Promise a) -> Resource' a
 
 createResource :: forall a. Aff a -> Resource a
-createResource aff = do
-  (d /\ m) <- createResource_ $ fromAff aff
-  let
-    maybeA = createMemo \_ -> fromUndefined $ access_ d
-  pure $ Tuple maybeA m
+createResource aff = Tuple maybeA m
+  where
+  (d /\ m) = createResource_ $ fromAff aff
+
+  maybeA = createMemo \_ -> fromUndefined $ access_ d
 
 type ModuleName
   = String

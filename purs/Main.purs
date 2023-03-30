@@ -3,10 +3,11 @@ module Main where
 import Prelude hiding (div)
 import Data.Generic.Rep (class Generic)
 import Data.Maybe (Maybe(..))
+import Frontend.Routes.Home as H
 import Frontend.Routes.Home.Data (homeRouteData)
 import Routing.Duplex (RouteDuplex', path, root)
 import Routing.Duplex.Generic as G
-import SolidJS.Basic (Component, fragment)
+import SolidJS.Basic (Component, createComponent, fragment)
 import SolidJS.Basic.Router (lazyRoute, route)
 import SolidJS.Basic.Start as S
 
@@ -24,19 +25,18 @@ routes =
         , "About": path "about" G.noArgs
         }
 
-router :: Component {}
-router _ =
-  fragment
-    [ route routes
-        { path: Home
-        , lazy: lazyRoute "Home" (Just homeRouteData)
-        }
-    , route routes
-        { path: About
-        , lazy: lazyRoute "About" Nothing
-        }
-    ]
-
+-- router :: Component {}
+-- router _ =
+--   fragment
+--     [ route routes
+--         { path: Home
+--         , lazy: lazyRoute "Home" (Just homeRouteData)
+--         }
+--     , route routes
+--         { path: About
+--         , lazy: lazyRoute "About" Nothing
+--         }
+--     ]
 default :: Component {}
 default _ =
   S.html { lang: "en" }
@@ -49,7 +49,14 @@ default _ =
         [ S.suspense {}
             [ S.errorBoundary {}
                 [ S.routes {}
-                    [ router {} ]
+                    -- [ router {} ]
+                    [ route routes
+                        { path: Home
+                        , component: H.default
+                        , data: homeRouteData
+                        -- , lazy: lazyRoute "Home" (Just homeRouteData)
+                        }
+                    ]
                 ]
             ]
         , S.scripts unit

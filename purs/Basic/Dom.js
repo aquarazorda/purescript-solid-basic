@@ -6,14 +6,26 @@ export const dynamic = (component) => (props) => (cs) => {
     component,
     get children() {
       return cs
+      // return cs?.map?.(item => (typeof item === 'function') ? children(item) : item) || cs
     }
   }));
 }
 
 export const show_ = (props) => createComponent(Show, mergeProps(props, {
+  get children() {
+    if (typeof props.children === 'function') {
+      return (v) => props.children(v()) || null;
+    }
+    return props.children || null;
+  },
   get when() {
-    return props.when()
+    if (typeof props.when === 'function') {
+      return props.when() || false;
+    }
+    return props.when || false;
   }
 }));
 
-export const toUndefined_ = (isJust) => (maybe) => isJust(maybe) ? maybe.value0 : undefined;
+export const toUndefined_ = (isJust) => (maybe) => {
+  return isJust(maybe) ? maybe.value0 : undefined;
+};

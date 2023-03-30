@@ -14,8 +14,8 @@ export const createComponent = (comp) => (props) => _createComponent(comp(), mer
 
 export const fragment = (children) => () => children;
 
-export const createResource_ = (resourceFn) => () => {
-  const [resource, mutRef] = _cr(async () => await resourceFn());
+export const createResource_ = (resourceFn) => {
+  const [resource, mutRef] = _cr(resourceFn);
   
   return { value0: resource, value1: mutRef };
 }
