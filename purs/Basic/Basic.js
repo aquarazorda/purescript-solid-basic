@@ -10,8 +10,8 @@ import {
 
 export const render = (componentFn) => (root) => () => _render(componentFn, root);
 
-export const createComponent = (comp) => _createComponent(comp);
-export const createComponent_ = (comp) => (props) => _createComponent(comp, props);
+export const createComponent = (comp) => () => _createComponent(comp);
+export const createComponent_ = (comp) => (props) => () => _createComponent(comp, mergeProps({}, props));
 
 export const fragment = (children) => () => children;
 
