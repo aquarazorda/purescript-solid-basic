@@ -27,7 +27,6 @@ to generate this file without the comments in this block.
   , "undefined-or"
   , "unsafe-coerce"
   , "web-dom"
-  , "web-html"
   ]
 , packages = ./packages.dhall
 , sources = [ "purs/**/*.purs" ]

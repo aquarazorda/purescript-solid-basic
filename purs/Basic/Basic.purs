@@ -53,7 +53,9 @@ foreign import createMemo :: forall a. (Unit -> a) -> Accessor a
 
 foreign import createMemo_ :: forall a. Effect a -> Effect (Accessor a)
 
-foreign import createComponent :: forall props. (props -> Effect Element) -> Component props
+foreign import createComponent :: Effect Element -> Element
+
+foreign import createComponent_ :: forall props. (Component props) -> props -> Element
 
 foreign import fragment :: Children -> Element
 
@@ -81,7 +83,4 @@ type ModuleName
 
 foreign import data Lazy :: Type -> Type
 
-foreign import lazy_ :: forall a. ModuleName -> (a -> Effect Element)
-
-lazy :: forall a. ModuleName -> Component a
-lazy = createComponent <<< lazy_
+foreign import lazy :: forall a. ModuleName -> Component a

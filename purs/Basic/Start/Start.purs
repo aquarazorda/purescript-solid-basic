@@ -1,53 +1,53 @@
 module SolidJS.Basic.Start (html, head, title, meta, body, routes, scripts, errorBoundary, suspense) where
 
 import Prelude
-import SolidJS.Basic (Children, ComponentWithChildren, Component)
-import SolidJS.Basic.Dom (dynamic)
+import SolidJS.Basic (Component, Children, createComponent_)
 import Web.DOM (Element)
-import Web.HTML (HTMLBodyElement, HTMLHeadElement, HTMLMetaElement, HTMLTitleElement)
-import Web.HTML.HTMLHtmlElement (HTMLHtmlElement)
 
-foreign import html_ :: HTMLHtmlElement
+foreign import html_ :: forall a. Component a
 
-html :: forall a. ComponentWithChildren a
-html = dynamic html_
+html :: forall props. props -> Element
+html = createComponent_ html_
 
-foreign import head_ :: HTMLHeadElement
+foreign import head_ :: Component { children :: Children }
 
-head :: Unit -> Children -> Element
-head = dynamic head_
+head :: Children -> Element
+head children = createComponent_ head_ { children }
 
-foreign import title_ :: HTMLTitleElement
+foreign import title_ :: Component { children :: String }
 
-title :: Unit -> String -> Element
-title = dynamic title_
+title :: String -> Element
+title children = createComponent_ title_ { children }
 
-foreign import meta_ :: HTMLMetaElement
+foreign import meta_ :: forall a. Component a
 
 meta :: forall a. Component a
-meta props = dynamic meta_ props []
+meta = createComponent_ meta_
 
-foreign import body_ :: HTMLBodyElement
+foreign import body_ :: forall props. Component props
 
-body :: forall a. ComponentWithChildren a
-body = dynamic body_
+body :: forall props. props -> Element
+body = createComponent_ body_
 
-foreign import routes_ :: Element
+foreign import routes_ :: Component { children :: Children }
 
-routes :: forall a. ComponentWithChildren a
-routes = dynamic routes_
+routes :: Children -> Element
+routes children = createComponent_ routes_ { children }
 
-foreign import scripts_ :: Element
+foreign import scripts_ :: Component {}
 
 scripts :: Unit -> Element
-scripts _ = dynamic scripts_ {} []
+scripts _ = createComponent_ scripts_ {}
 
-foreign import errorBoundary_ :: Element
+type WithFallbackProps fb
+  = { fallback :: fb, children :: Children }
 
-errorBoundary :: forall a. ComponentWithChildren a
-errorBoundary = dynamic errorBoundary_
+foreign import errorBoundary_ :: forall e. Component (WithFallbackProps (Component e))
 
-foreign import suspense_ :: forall a. ComponentWithChildren a
+errorBoundary :: forall e. Component e -> Children -> Element
+errorBoundary fallback children = createComponent_ errorBoundary_ { fallback, children }
 
-suspense :: forall a. ComponentWithChildren a
-suspense = dynamic suspense_
+foreign import suspense_ :: Component (WithFallbackProps Element)
+
+suspense :: Element -> Children -> Element
+suspense fallback children = createComponent_ suspense_ { fallback, children }

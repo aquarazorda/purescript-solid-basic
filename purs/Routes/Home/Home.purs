@@ -12,16 +12,14 @@ type ResourceData
   = Resource { title :: String }
 
 default ∷ Component {}
-default =
-  createComponent \_ -> do
+default _ =
+  createComponent do
     routeData <- useRouteData :: RouteData ResourceData
     let
       showContent :: ResourceData -> Element
       showContent (m /\ _) = showAccessorMaybe m (text "No data...") \{ title } -> text title
     pure
-      $ suspense
-          { fallback: text "Loading..."
-          }
+      $ suspense (text "Loading...")
           [ div { className: "flex justify-center" }
               [ showAccessorMaybe routeData (text "No route data provided") showContent
               ]

@@ -10,7 +10,8 @@ import {
 
 export const render = (componentFn) => (root) => () => _render(componentFn, root);
 
-export const createComponent = (comp) => (props) => _createComponent(comp(), mergeProps({}, props));
+export const createComponent = (comp) => _createComponent(comp);
+export const createComponent_ = (comp) => (props) => _createComponent(comp, props);
 
 export const fragment = (children) => () => children;
 
@@ -32,4 +33,4 @@ export const createEffect = (effectFn) => () => _createEffect(effectFn);
 export const createMemo = (memoFn) => _createMemo(memoFn);
 export const createMemo_ = (memoFn) => () => _createMemo(memoFn);
 
-export const lazy_ = (path) => () => lzy(() => import(`../../output/Frontend.${path}/index.js`));
+export const lazy = (path) => lzy(() => import(`../../output/Frontend.${path}/index.js`));

@@ -27,10 +27,12 @@ type RouteProps route compProps routeData
 
 foreign import route_ :: forall a. Record a -> Element
 
-route ::
-  forall attrs attrs2 route compProps routeData.
-  Union attrs attrs2 (RouteProps route compProps routeData) =>
-  RouteDuplex' route -> Record attrs -> Element
+type Route
+  = forall attrs attrs2 route compProps routeData.
+    Union attrs attrs2 (RouteProps route compProps routeData) =>
+    RouteDuplex' route -> Record attrs -> Element
+
+route :: Route
 route routes props = route_ $ modify (Proxy :: Proxy "path") (unsafeCoerce $ print routes) (unsafeCoerce props)
 
 foreign import lazyRoute :: forall a routeData. ModuleName -> (Unit -> routeData) -> Lazy (Component a)
