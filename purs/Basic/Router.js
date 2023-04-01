@@ -1,11 +1,11 @@
-import { createComponent, lazy } from 'solid-js';
+import { createComponent, lazy, mergeProps } from 'solid-js';
 import { Route as Route_, useRouteData as uRD } from 'solid-start';
 
 export const route_ = (props) => {
   if (props.lazy) {
     return createComponent(Route_, {
       path: props.path,
-      component: lazy(() => props.lazy.component),
+      component: (ps) => createComponent(lazy(() => props.lazy.component), ps),
       data: props.lazy.data
     });
   }
@@ -24,4 +24,4 @@ export const lazyRoute = (path) => (dataFn) => {
   });
 }
 
-export const useRouteData_ = uRD;
+export const useRouteData = uRD;

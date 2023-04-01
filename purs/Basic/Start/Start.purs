@@ -1,7 +1,21 @@
-module SolidJS.Basic.Start (html, head, title, meta, body, routes, scripts, errorBoundary, suspense) where
+module SolidJS.Basic.Start
+  ( html
+  , head
+  , title
+  , meta
+  , body
+  , routes
+  , scripts
+  , errorBoundary
+  , suspense
+  , a
+  , link
+  ) where
 
 import Prelude
-import SolidJS.Basic (Component, Children, createComponent_)
+import Data.Function.Uncurried (Fn0)
+import Effect (Effect)
+import SolidJS.Basic (Accessor(..), Children, Component, ComponentWithChildren, Props, cc, createComponent_)
 import Web.DOM (Element)
 
 foreign import html_ :: forall a. Component a
@@ -9,10 +23,10 @@ foreign import html_ :: forall a. Component a
 html :: forall props. props -> Element
 html = createComponent_ html_
 
-foreign import head_ :: Component { children :: Children }
+foreign import head_ :: forall a. Component a
 
-head :: Children -> Element
-head children = createComponent_ head_ { children }
+head :: forall props. props -> Children -> Element
+head = cc head_
 
 foreign import title_ :: Component { children :: String }
 
@@ -24,30 +38,37 @@ foreign import meta_ :: forall a. Component a
 meta :: forall a. Component a
 meta = createComponent_ meta_
 
+foreign import link_ :: forall a. Component a
+
+link :: forall a. Component a
+link = createComponent_ link_
+
 foreign import body_ :: forall props. Component props
 
-body :: forall props. props -> Element
-body = createComponent_ body_
+body :: forall props. props -> Children -> Element
+body = cc body_
 
-foreign import routes_ :: Component { children :: Children }
+foreign import routes_ :: forall props. Component props
 
-routes :: Children -> Element
-routes children = createComponent_ routes_ { children }
+routes :: forall props. props -> Children -> Element
+routes = cc routes_
 
 foreign import scripts_ :: Component {}
 
 scripts :: Unit -> Element
 scripts _ = createComponent_ scripts_ {}
 
-type WithFallbackProps fb
-  = { fallback :: fb, children :: Children }
-
-foreign import errorBoundary_ :: forall e. Component (WithFallbackProps (Component e))
+foreign import errorBoundary_ :: forall e. Component e
 
 errorBoundary :: forall e. Component e -> Children -> Element
-errorBoundary fallback children = createComponent_ errorBoundary_ { fallback, children }
+errorBoundary fallback children = cc errorBoundary_ { fallback } children
 
-foreign import suspense_ :: Component (WithFallbackProps Element)
+foreign import suspense_ :: forall a. Component a
 
-suspense :: Element -> Children -> Element
-suspense fallback children = createComponent_ suspense_ { fallback, children }
+suspense :: forall a. a -> Children -> Element
+suspense = cc suspense_
+
+foreign import a_ :: forall a. Component a
+
+a :: forall props. props -> Children -> Element
+a children props = createComponent_ a_ { children, props }

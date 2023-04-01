@@ -1,4 +1,4 @@
-import { createComponent as _createComponent, Dynamic, render as _render } from 'solid-js/web';
+import { createComponent as _createComponent, render as _render } from 'solid-js/web';
 import {
   createSignal as _createSignal,
   createEffect as _createEffect,
@@ -10,8 +10,9 @@ import {
 
 export const render = (componentFn) => (root) => () => _render(componentFn, root);
 
-export const createComponent = (comp) => () => _createComponent(comp);
-export const createComponent_ = (comp) => (props) => () => _createComponent(comp, mergeProps({}, props));
+export const createComponent = (comp) => _createComponent(comp);
+export const createComponent_ = (comp) => (props) => _createComponent(comp, mergeProps({}, props));
+export const cc = (comp) => (props) => (children) => _createComponent(comp, mergeProps(props, children))
 
 export const fragment = (children) => () => children;
 
@@ -19,7 +20,7 @@ export const createResource_ = (nothing) => (resourceFn) => {
   const [resource, mutRef] = _cr(resourceFn, {
     initialValue: nothing
   });
-  
+
   return { value0: resource, value1: mutRef };
 }
 
@@ -33,4 +34,12 @@ export const createEffect = (effectFn) => () => _createEffect(effectFn);
 export const createMemo = (memoFn) => _createMemo(memoFn);
 export const createMemo_ = (memoFn) => () => _createMemo(memoFn);
 
-export const lazy = (path) => lzy(() => import(`../../output/Frontend.${path}/index.js`));
+export const lazy = (path) => lzy(() => import(`../../output/${path}/index.js`));
+
+export const props = mergeProps;
+
+export const toGetterProp = (key) => (fn) => ({
+  get [key]() {
+    return fn();
+  }
+})

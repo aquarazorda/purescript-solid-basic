@@ -7,20 +7,20 @@ import Effect (Effect)
 import Prim.Row (class Union)
 import Record (modify)
 import Routing.Duplex (RouteDuplex', print)
-import SolidJS.Basic (Accessor, Children, Component, Lazy, ModuleName, createMemo_)
+import SolidJS.Basic (Accessor, Children, Component, Lazy, ModuleName, createComponent_, createMemo_)
 import Type.Proxy (Proxy(..))
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Element)
 
 type RouteData a
-  = Effect (Accessor (Maybe a))
+  = Effect a
 
 type RouteProps route compProps routeData
   = ( path :: route
     , children :: Children
     , data :: Unit -> routeData
     -- , matchFilters :: Maybe (MatchFilters s)
-    , component :: Component compProps
+    , component :: Effect Element
     , preload :: Effect Unit
     , lazy :: Lazy (Component compProps)
     )
@@ -32,12 +32,14 @@ type Route
     Union attrs attrs2 (RouteProps route compProps routeData) =>
     RouteDuplex' route -> Record attrs -> Element
 
-route :: Route
-route routes props = route_ $ modify (Proxy :: Proxy "path") (unsafeCoerce $ print routes) (unsafeCoerce props)
+route :: forall a. Record a -> Element
+route = route_
 
+-- route :: Route
+-- route routes props = route_ $ modify (Proxy :: Proxy "path") (unsafeCoerce $ print routes) (unsafeCoerce props)
 foreign import lazyRoute :: forall a routeData. ModuleName -> (Unit -> routeData) -> Lazy (Component a)
 
-foreign import useRouteData_ :: forall a. Effect (UndefinedOr a)
+foreign import useRouteData :: forall a. Effect a
 
-useRouteData :: forall a. RouteData a
-useRouteData = createMemo_ (fromUndefined <$> useRouteData_)
+-- useRouteData :: forall a. RouteData a
+-- useRouteData = createMemo_ (fromUndefined <$> useRouteData_)

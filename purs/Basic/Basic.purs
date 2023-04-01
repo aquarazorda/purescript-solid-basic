@@ -16,8 +16,11 @@ type Component props
 type ComponentWithChildren props
   = props -> Children -> Element
 
+data ChildrenProp a
+  = Children (Accessor a)
+
 type Children
-  = Array Element
+  = ChildrenProp (Array Element)
 
 data Accessor a
   = Accessor a
@@ -57,6 +60,8 @@ foreign import createComponent :: Effect Element -> Element
 
 foreign import createComponent_ :: forall props. (Component props) -> props -> Element
 
+foreign import cc :: forall props. (Component props) -> props -> Children -> Element
+
 foreign import fragment :: Children -> Element
 
 -- type Resource a
@@ -84,3 +89,11 @@ type ModuleName
 foreign import data Lazy :: Type -> Type
 
 foreign import lazy :: forall a. ModuleName -> Component a
+
+foreign import data Props :: Type -> Type
+
+foreign import props :: forall a. a -> Props a
+
+foreign import toGetterProp :: forall a. String -> (Unit -> a) -> Props a
+
+foreign import children :: (Unit -> Array Element) -> Children

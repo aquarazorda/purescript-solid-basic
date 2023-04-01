@@ -1,29 +1,26 @@
 import { Show, createComponent, mergeProps } from 'solid-js';
 import { Dynamic } from 'solid-js/web';
 
-export const dynamic = (component) => (props) => (cs) => createComponent(Dynamic, mergeProps(props, {
-  component,
-  get children() {
-    return cs
-  }
-}));
+export const dynamic = (component) => (props) => (children) => 
+createComponent(Dynamic, mergeProps(props, { component }, children));
 
-export const show_ = (props) => createComponent(Show, mergeProps(props, {
+export const show = (when) => (fallback) => (children) => createComponent(Show, {
+  fallback,
   get children() {
-    if (typeof props.children === 'function') {
+    if (typeof children === 'function') {
       return (v) => {
-        return props.children(typeof v === 'function' ? v() : v) || null
+        return children(typeof v === 'function' ? v() : v) || null
       };
     }
-    return props.children || null;
+    return children || null;
   },
   get when() {
-    if (typeof props.when === 'function') {
-      return props.when() || false;
+    if (typeof when === 'function') {
+      return when() || false;
     }
-    return props.when || false;
+    return when || false;
   }
-}));
+});
 
 export const toUndefined_ = (isJust) => (maybe) => {
   return isJust(maybe) ? maybe.value0 : undefined;

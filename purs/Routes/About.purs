@@ -1,10 +1,12 @@
 module Frontend.Routes.About where
 
-import SolidJS.Basic (Component)
+import Prelude (($))
+import SolidJS.Basic (Component, children)
 import SolidJS.Basic.Dom (div, text)
 
 default :: Component {}
 default _ =
   div { className: "flex justify-center" }
-    [ text "About"
-    ]
+    $ children \_ ->
+        [ text "About"
+        ]
