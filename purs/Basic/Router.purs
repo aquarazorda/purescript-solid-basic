@@ -1,15 +1,10 @@
 module SolidJS.Basic.Router where
 
 import Prelude
-import Data.Maybe (Maybe)
-import Data.UndefinedOr (UndefinedOr, fromUndefined)
 import Effect (Effect)
 import Prim.Row (class Union)
-import Record (modify)
-import Routing.Duplex (RouteDuplex', print)
-import SolidJS.Basic (Accessor, Children, Component, Lazy, ModuleName, createComponent_, createMemo_)
-import Type.Proxy (Proxy(..))
-import Unsafe.Coerce (unsafeCoerce)
+import Routing.Duplex (RouteDuplex')
+import SolidJS.Basic (Children, Component, Lazy, ModuleName)
 import Web.DOM (Element)
 
 type RouteData a

@@ -16,11 +16,11 @@ type Component props
 type ComponentWithChildren props
   = props -> Children -> Element
 
-data ChildrenProp a
-  = Children (Accessor a)
+data GetterProp a
+  = GetterProp a
 
 type Children
-  = ChildrenProp (Array Element)
+  = GetterProp (Array Element)
 
 data Accessor a
   = Accessor a
@@ -94,6 +94,8 @@ foreign import data Props :: Type -> Type
 
 foreign import props :: forall a. a -> Props a
 
-foreign import toGetterProp :: forall a. String -> (Unit -> a) -> Props a
+foreign import toGetterProp :: forall a. String -> (Unit -> a) -> GetterProp a
 
-foreign import children :: (Unit -> Array Element) -> Children
+-- foreign import children :: (Unit -> Array Element) -> Children
+children :: (Unit -> Array Element) -> Children
+children = toGetterProp "children"
