@@ -2,7 +2,7 @@ module Frontend.Routes.Home (default) where
 
 import Prelude hiding (div, show)
 import Data.Tuple.Nested ((/\))
-import SolidJS.Basic (Component, Resource, children, createComponent, props)
+import SolidJS.Basic (Component, Resource, children, createComponent)
 import SolidJS.Basic.Dom (div, showAccessorMaybe, text)
 import SolidJS.Basic.Router (RouteData, useRouteData)
 import SolidJS.Basic.Start (suspense)
@@ -15,14 +15,10 @@ default _ =
   createComponent do
     routeData /\ _ <- useRouteData :: RouteData ResourceData
     pure
-      $ suspense
-          {}
-      $ children
-          ( \_ ->
-              [ div
-                  { className: "flex justify-center" }
-                  $ children \_ ->
-                      [ showAccessorMaybe routeData (text "No data...") \{ title } -> text title
-                      ]
-              ]
-          )
+      $ suspense {} \_ ->
+          [ div
+              { className: "flex justify-center" }
+              $ children \_ ->
+                  [ showAccessorMaybe routeData (text "No data...") \{ title } -> text title
+                  ]
+          ]

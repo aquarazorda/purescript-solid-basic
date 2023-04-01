@@ -54,20 +54,19 @@ default _ =
                 ]
         , S.body {}
             $ children \_ ->
-                [ S.suspense {}
-                    $ children \_ ->
-                        [ S.routes {}
-                            $ children \_ ->
-                                [ route
-                                    { path: "/"
-                                    , component: HS.default
-                                    , data: homeRouteData
-                                    -- , lazy: lazyRoute "Home" homeRouteData
-                                    }
-                                ]
-                        -- [ router {}
-                        -- ]
-                        ]
+                [ S.suspense {} \_ ->
+                    [ S.routes {}
+                        $ children \_ ->
+                            [ route
+                                { path: "/"
+                                , component: HS.default
+                                , data: homeRouteData
+                                -- , lazy: lazyRoute "Home" homeRouteData
+                                }
+                            ]
+                    -- [ router {}
+                    -- ]
+                    ]
                 , S.scripts unit
                 ]
         ]

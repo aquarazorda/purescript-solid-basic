@@ -13,9 +13,7 @@ module SolidJS.Basic.Start
   ) where
 
 import Prelude
-import Data.Function.Uncurried (Fn0)
-import Effect (Effect)
-import SolidJS.Basic (Accessor(..), Children, Component, ComponentWithChildren, Props, cc, createComponent_)
+import SolidJS.Basic (Children, Component, cc, children, createComponent_)
 import Web.DOM (Element)
 
 foreign import html_ :: forall a. Component a
@@ -65,8 +63,8 @@ errorBoundary fallback children = cc errorBoundary_ { fallback } children
 
 foreign import suspense_ :: forall a. Component a
 
-suspense :: forall a. a -> Children -> Element
-suspense = cc suspense_
+suspense :: forall a. a -> (Unit -> Array Element) -> Element
+suspense props = cc suspense_ props <<< children
 
 foreign import a_ :: forall a. Component a
 

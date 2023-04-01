@@ -3,7 +3,7 @@ module SolidJS.Basic.Dom where
 import Data.Maybe (Maybe, isJust)
 import Data.UndefinedOr (UndefinedOr)
 import Prelude (pure, ($), (<$>))
-import SolidJS.Basic (Accessor, Children, Component, createComponent, createComponent_)
+import SolidJS.Basic (Accessor, Children, createComponent)
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Element)
 

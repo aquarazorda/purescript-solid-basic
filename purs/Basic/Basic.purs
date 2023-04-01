@@ -16,12 +16,6 @@ type Component props
 type ComponentWithChildren props
   = props -> Children -> Element
 
-data GetterProp a
-  = GetterProp a
-
-type Children
-  = GetterProp (Array Element)
-
 data Accessor a
   = Accessor a
 
@@ -90,12 +84,14 @@ foreign import data Lazy :: Type -> Type
 
 foreign import lazy :: forall a. ModuleName -> Component a
 
+type Children
+  = Array Element
+
 foreign import data Props :: Type -> Type
 
 foreign import props :: forall a. a -> Props a
 
-foreign import toGetterProp :: forall a. String -> (Unit -> a) -> GetterProp a
+foreign import toGetterProp :: forall a. String -> (Unit -> a) -> a
 
--- foreign import children :: (Unit -> Array Element) -> Children
 children :: (Unit -> Array Element) -> Children
 children = toGetterProp "children"
