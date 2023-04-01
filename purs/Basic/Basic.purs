@@ -56,6 +56,9 @@ foreign import createComponent_ :: forall props. (Component props) -> props -> E
 
 foreign import cc :: forall props. (Component props) -> props -> Children -> Element
 
+createWithChildren :: forall props. (Component props) -> props -> ChildrenAsProp -> Element
+createWithChildren c ps = cc c ps <<< children
+
 foreign import fragment :: Children -> Element
 
 -- type Resource a
@@ -84,14 +87,20 @@ foreign import data Lazy :: Type -> Type
 
 foreign import lazy :: forall a. ModuleName -> Component a
 
+data GetterProp a
+  = GetterProp a
+
 type Children
-  = Array Element
+  = GetterProp (Array Element)
+
+type ChildrenAsProp
+  = Unit -> Array Element
 
 foreign import data Props :: Type -> Type
 
 foreign import props :: forall a. a -> Props a
 
-foreign import toGetterProp :: forall a. String -> (Unit -> a) -> a
+foreign import toGetterProp :: forall a. String -> (Unit -> a) -> GetterProp a
 
-children :: (Unit -> Array Element) -> Children
+children :: ChildrenAsProp -> Children
 children = toGetterProp "children"

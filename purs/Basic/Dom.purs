@@ -2,30 +2,30 @@ module SolidJS.Basic.Dom where
 
 import Data.Maybe (Maybe, isJust)
 import Data.UndefinedOr (UndefinedOr)
-import Prelude (pure, ($), (<$>))
-import SolidJS.Basic (Accessor, Children, createComponent)
+import Prelude (pure, ($), (<$>), (<<<))
+import SolidJS.Basic (Accessor, Children, ChildrenAsProp, children, createComponent)
 import Unsafe.Coerce (unsafeCoerce)
 import Web.DOM (Element)
 
 type Fallback
   = Element
 
-type PropsWithChildren props
-  = Record ( children :: Children | props )
+foreign import dynamic :: forall props component. component -> props -> Children -> Element
 
-foreign import dynamic :: forall props component children. component -> props -> children -> Element
+dyn :: forall props component. component -> props -> ChildrenAsProp -> Element
+dyn name ps = dynamic name ps <<< children
 
 text :: forall a. a -> Element
 text = unsafeCoerce
 
-div :: forall props. props -> Children -> Element
-div = dynamic "div"
+div :: forall props. props -> ChildrenAsProp -> Element
+div = dyn "div"
 
-div_ ∷ Children -> Element
+div_ ∷ ChildrenAsProp -> Element
 div_ children = div {} children
 
-button ∷ forall props. props -> Children → Element
-button = dynamic "button"
+button ∷ forall props. props -> ChildrenAsProp → Element
+button = dyn "button"
 
 foreign import toUndefined_ :: forall a. (Maybe a -> Boolean) -> Maybe a -> UndefinedOr a
 

@@ -13,7 +13,7 @@ module SolidJS.Basic.Start
   ) where
 
 import Prelude
-import SolidJS.Basic (Children, Component, cc, children, createComponent_)
+import SolidJS.Basic (Children, Component, ChildrenAsProp, cc, createComponent_, createWithChildren)
 import Web.DOM (Element)
 
 foreign import html_ :: forall a. Component a
@@ -23,8 +23,8 @@ html = createComponent_ html_
 
 foreign import head_ :: forall a. Component a
 
-head :: forall props. props -> Children -> Element
-head = cc head_
+head :: forall props. props -> ChildrenAsProp -> Element
+head = createWithChildren head_
 
 foreign import title_ :: Component { children :: String }
 
@@ -43,13 +43,13 @@ link = createComponent_ link_
 
 foreign import body_ :: forall props. Component props
 
-body :: forall props. props -> Children -> Element
-body = cc body_
+body :: forall props. props -> ChildrenAsProp -> Element
+body = createWithChildren body_
 
 foreign import routes_ :: forall props. Component props
 
-routes :: forall props. props -> Children -> Element
-routes = cc routes_
+routes :: forall props. props -> ChildrenAsProp -> Element
+routes = createWithChildren routes_
 
 foreign import scripts_ :: Component {}
 
@@ -63,8 +63,8 @@ errorBoundary fallback children = cc errorBoundary_ { fallback } children
 
 foreign import suspense_ :: forall a. Component a
 
-suspense :: forall a. a -> (Unit -> Array Element) -> Element
-suspense props = cc suspense_ props <<< children
+suspense :: forall a. a -> ChildrenAsProp -> Element
+suspense = createWithChildren suspense_
 
 foreign import a_ :: forall a. Component a
 
