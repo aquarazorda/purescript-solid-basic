@@ -9,7 +9,6 @@ export const route_ = (props) => {
       data: props.lazy.data
     });
   }
-
   return createComponent(Route_, {
     path: props.path,
     component: props.component,

@@ -9,6 +9,7 @@ export const show = (when) => (fallback) => (children) => createComponent(Show, 
   get children() {
     if (typeof children === 'function') {
       return (v) => {
+        console.log("123", v());
         return children(typeof v === 'function' ? v() : v) || null
       };
     }

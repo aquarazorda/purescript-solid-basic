@@ -7,6 +7,7 @@ import Routing.Duplex (RouteDuplex', path, root)
 import Routing.Duplex.Generic as G
 import SolidJS.Basic (Component, createComponent_)
 import SolidJS.Basic.Dom (text)
+import SolidJS.Basic.Query (getQueryClient, queryClientProvider)
 import SolidJS.Basic.Router (lazyRoute, route)
 import SolidJS.Basic.Start as S
 
@@ -39,7 +40,9 @@ router =
       ]
 
 default :: Component {}
-default _ =
+default _ = do
+  let
+    queryClient = getQueryClient unit
   S.html
     { lang: "en"
     , children:
@@ -47,14 +50,17 @@ default _ =
             [ S.title "SolidStart PureScript Tailwind - Hacker News"
             , S.meta { charset: "utf-8" }
             , S.meta { name: "viewport", content: "width=device-width, initial-scale=1" }
-            , S.meta { name: "description", content: "Hacker News clone build with PureScript" }
+            , S.meta { name: "description", content: "Hacker News clone built with PureScript" }
             ]
         , S.body {} \_ ->
-            [ S.suspense {} \_ ->
-                [ S.routes {} \_ ->
-                    [ router {}
+            [ queryClientProvider queryClient
+                $ \_ ->
+                    [ S.suspense {} \_ ->
+                        [ S.routes {} \_ ->
+                            [ router {}
+                            ]
+                        ]
                     ]
-                ]
             , S.scripts unit
             ]
         ]

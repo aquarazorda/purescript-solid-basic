@@ -3,8 +3,8 @@ module SolidJS.Basic where
 import Prelude
 import Control.Promise (Promise, fromAff)
 import Data.Function.Uncurried (mkFn0, runFn0)
-import Data.Maybe (Maybe(..))
 import Data.Tuple (Tuple)
+import Data.UndefinedOr (UndefinedOr)
 import Effect (Effect)
 import Effect.Aff (Aff)
 import Unsafe.Coerce (unsafeCoerce)
@@ -48,7 +48,8 @@ foreign import createEffect :: (Unit -> Effect Unit) -> Effect Unit
 
 foreign import createMemo :: forall a. (Unit -> a) -> Accessor a
 
-foreign import createMemo_ :: forall a. Effect a -> Effect (Accessor a)
+createMemo_ :: forall a. Effect a -> Accessor a
+createMemo_ = unsafeCoerce createMemo
 
 foreign import createComponent :: Effect Element -> Element
 
@@ -73,12 +74,12 @@ type ResourceActions
   = { mutate :: Effect Unit, refetch :: Effect Unit }
 
 type Resource a
-  = Tuple (Accessor (Maybe a)) ResourceActions
+  = Tuple (Accessor (UndefinedOr a)) ResourceActions
 
-foreign import createResource_ :: forall initial a. Maybe initial -> Effect (Promise (Maybe a)) -> Resource a
+foreign import createResource_ :: forall a. Effect (Promise a) -> Resource a
 
-createResource :: forall a. Aff (Maybe a) -> Resource a
-createResource aff = createResource_ Nothing $ fromAff aff
+createResource :: forall a. Aff a -> Resource a
+createResource = createResource_ <<< fromAff
 
 type ModuleName
   = String
