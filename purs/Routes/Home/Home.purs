@@ -1,34 +1,64 @@
 module Frontend.Routes.Home (default) where
 
-import Prelude hiding (div, show)
-import Data.Maybe (Maybe(..))
-import Data.Tuple.Nested ((/\))
-import Data.UndefinedOr (fromUndefined, isUndefined)
-import Foreign (Foreign)
-import Frontend.Routes.Home.Data (homeRouteData)
-import SolidJS.Basic (Accessor, Component, Resource, access, access_, createComponent, createMemo, createSignal)
-import SolidJS.Basic.Dom (button, div, show, showAccessorMaybe, text)
-import SolidJS.Basic.Query (QueryReturn)
-import SolidJS.Basic.Router (RouteData, useRouteData)
-import SolidJS.Basic.Start (suspense)
-import Unsafe.Coerce (unsafeCoerce)
-import Web.DOM (Element)
+import Prelude hiding (div)
+import Data.Array (length)
+import Data.UndefinedOr (isUndefined, toUndefined)
+import Effect (Effect)
+import Frontend.Routes.Home.Data (StoriesData)
+import HackerNews.Components.Story (storyComponent)
+import SolidJS.Basic (Component, Resource, createComponent_)
+import SolidJS.Basic.Dom (forEach, show_)
+import SolidJS.Basic.Dom as D
+import SolidJS.Basic.Router (useRouteData)
+import SolidJS.Basic.Signals (access, createMemo, memoProp)
+import SolidJS.Basic.Start (a)
 
 type ResourceData
   = Resource { title :: String }
 
-showContent :: { title :: String } -> Element
-showContent { title } = text title
-
 default ∷ Component {}
 default _ =
-  createComponent do
-    qr /\ _ <- useRouteData :: RouteData ResourceData
-    count /\ setCount <- createSignal 0
+  createComponent_ do
+    { page, stories, typ } <- useRouteData :: Effect StoriesData
     pure
-      $ div
-          { className: "flex justify-center" } \_ ->
-          -- [ show (isUndefined qr.data) (text "No data...") \{ title } -> text title ]
-          [ showAccessorMaybe (fromUndefined <$> qr) (text "No data..") showContent
-          , button { onClick: \_ -> setCount $ access_ count + 1 } \_ -> [ text count ]
+      $ D.div
+          { class: "news-view" }
+          [ D.div
+              { "class": "news-list-nav" }
+              [ D.show_ (createMemo \_ -> access page > 1)
+                  ( D.span { class: "page-link disabled", ariaDisabled: "true" }
+                      [ D.text "< prev"
+                      ]
+                  )
+                  [ a
+                      { class: "page-link"
+                      , href: memoProp $ createMemo \_ -> "/" <> access typ <> "?page=" <> show (access page - 1)
+                      , ariaLabel: "Previous Page"
+                      }
+                      [ D.text "< prev"
+                      ]
+                  ]
+              , D.span {} [ D.text $ createMemo \_ -> "page " <> show (access page) ]
+              , D.show_
+                  (createMemo \_ -> (not (isUndefined $ toUndefined $ access stories)) && ((length $ access stories)) > 28)
+                  ( D.span { class: "page-link disabled", ariaDisabled: "true" }
+                      [ D.text "more >"
+                      ]
+                  )
+                  [ a
+                      { class: "page-link"
+                      , href: memoProp $ createMemo \_ -> "/" <> access typ <> "?page=" <> show ((access page) + 1)
+                      , ariaLabel: "Next Page"
+                      }
+                      [ D.text "more >" ]
+                  ]
+              ]
+          , D.main
+              { class: "news-list" }
+              [ show_ stories (D.text "No stories found")
+                  [ D.ul {}
+                      [ forEach stories (D.text "Loading...") storyComponent
+                      ]
+                  ]
+              ]
           ]

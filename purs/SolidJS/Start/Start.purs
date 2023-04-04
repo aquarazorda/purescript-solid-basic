@@ -10,63 +10,74 @@ module SolidJS.Basic.Start
   , suspense
   , a
   , link
+  , outlet
   ) where
 
 import Prelude
-import SolidJS.Basic (Children, Component, ChildrenAsProp, cc, createComponent_, createWithChildren)
-import Web.DOM (Element)
+import SolidJS.Basic (Component, ComponentWithChildren, createComponent, createComponentChildren, createComponent_)
+import SolidJS.Basic.Dom (text)
+import SolidJS.Basic.Props (Props, (:=))
+import SolidJS.Basic.Types (Children, Element)
 
 foreign import html_ :: forall a. Component a
 
 html :: forall props. props -> Element
-html = createComponent_ html_
+html = createComponent html_
 
 foreign import head_ :: forall a. Component a
 
-head :: forall props. props -> ChildrenAsProp -> Element
-head = createWithChildren head_
+head :: forall a. ComponentWithChildren a
+head = createComponentChildren head_
 
-foreign import title_ :: Component { children :: String }
+foreign import title_ :: Component {}
 
 title :: String -> Element
-title children = createComponent_ title_ { children }
+title s = createComponentChildren title_ {} [ text s ]
 
 foreign import meta_ :: forall a. Component a
 
 meta :: forall a. Component a
-meta = createComponent_ meta_
+meta = createComponent meta_
 
 foreign import link_ :: forall a. Component a
 
 link :: forall a. Component a
-link = createComponent_ link_
+link = createComponent link_
 
 foreign import body_ :: forall props. Component props
 
-body :: forall props. props -> ChildrenAsProp -> Element
-body = createWithChildren body_
+body :: forall a. ComponentWithChildren a
+body = createComponentChildren body_
 
 foreign import routes_ :: forall props. Component props
 
-routes :: forall props. props -> ChildrenAsProp -> Element
-routes = createWithChildren routes_
+routes :: forall a. ComponentWithChildren a
+routes = createComponentChildren routes_
 
 foreign import scripts_ :: Component {}
 
 scripts :: Unit -> Element
-scripts _ = createComponent_ scripts_ {}
+scripts _ = createComponent scripts_ {}
 
 foreign import errorBoundary_ :: forall e. Component e
 
 errorBoundary :: forall e. Component e -> Children -> Element
-errorBoundary fallback children = cc errorBoundary_ { fallback } children
+errorBoundary fallback =
+  createComponentChildren errorBoundary_
+    { fallback
+    }
 
 foreign import suspense_ :: forall a. Component a
 
-suspense :: forall a. a -> ChildrenAsProp -> Element
-suspense = createWithChildren suspense_
+suspense :: forall a. Element -> Children -> Element
+suspense fallback = createComponentChildren suspense_ { fallback }
 
 foreign import a_ :: forall a. Component a
 
-a :: forall props. props -> Children -> Element
-a children props = createComponent_ a_ { children, props }
+a :: forall props. ComponentWithChildren props
+a = createComponentChildren a_
+
+foreign import outlet_ :: forall a. Component a
+
+outlet :: Unit -> Element
+outlet _ = createComponentChildren outlet_ [] []

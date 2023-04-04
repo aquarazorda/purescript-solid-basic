@@ -5,6 +5,6 @@ import SolidJS.Basic.Dom (div, text)
 
 default :: Component {}
 default _ =
-  div { className: "flex justify-center" } \_ ->
+  div { className: "flex justify-center" }
     [ text "About"
     ]
