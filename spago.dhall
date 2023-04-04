@@ -22,6 +22,7 @@ to generate this file without the comments in this block.
   , "prelude"
   , "record"
   , "routing-duplex"
+  , "stringutils"
   , "tuples"
   , "undefined-or"
   , "unsafe-coerce"
