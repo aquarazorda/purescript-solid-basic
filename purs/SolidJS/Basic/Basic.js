@@ -26,7 +26,7 @@ export const transformObject = (obj, children) => {
     }
     
     Object.defineProperty(obj, "children", {
-      value: children,
+      get: () => children,
     });
   }
 
