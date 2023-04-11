@@ -46,6 +46,9 @@ createResource = createResource_ <<< fromAff
 
 foreign import createResourceWithSource :: forall a b. Accessor a -> (a -> Promise b) -> Resource b
 
+createResourceWithSource' :: forall a b. (Unit -> a) -> (a -> Promise b) -> Resource b
+createResourceWithSource' = unsafeCoerce createResourceWithSource
+
 type ModuleName
   = String
 

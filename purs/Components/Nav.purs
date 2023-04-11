@@ -11,7 +11,7 @@ nav _ =
     pure
       $ D.header { class: "header" }
           [ D.nav { class: "inner" }
-              [ a { "href": "/" }
+              [ a { "href": "/", end: true }
                   [ D.strong {}
                       [ D.text "HN"
                       ]

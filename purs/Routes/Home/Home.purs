@@ -55,9 +55,9 @@ default _ =
               ]
           , D.main
               { class: "news-list" }
-              [ show_ stories (D.text "No stories found")
+              [ show_ (createMemo \_ -> length $ access stories) (D.text $ createMemo \_ -> "No " <> access typ <> " found")
                   [ D.ul {}
-                      [ forEach stories (D.text "Loading...") storyComponent
+                      [ forEach stories (D.text "") storyComponent
                       ]
                   ]
               ]
