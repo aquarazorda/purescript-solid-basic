@@ -1,10 +1,10 @@
 let upstream =
-      https://github.com/purescript/package-sets/releases/download/psc-0.15.7-20230310/packages.dhall
-        sha256:c30c50d19c9eb55516b0a8a1bd368a0754bde47365be36abadb489295d86d77c
+      https://github.com/purescript/package-sets/releases/download/psc-0.15.4-20230105/packages.dhall
+        sha256:3e9fbc9ba03e9a1fcfd895f65e2d50ee2f5e86c4cd273f3d5c841b655a0e1bda
 
 in  upstream
-  with undefined-or = {
-    repo = "https://github.com/d86leader/purescript-undefined-or"
-  , version = "master"
-  , dependencies = [ "maybe", "prelude" ]
-  }
+  with undefined-or =
+    { repo = "https://github.com/d86leader/purescript-undefined-or"
+    , version = "master"
+    , dependencies = [ "maybe", "prelude" ]
+    }
