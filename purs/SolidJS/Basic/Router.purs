@@ -6,10 +6,9 @@ import Prim.Row (class Union)
 import Record (modify)
 import Routing.Duplex (RouteDuplex', print)
 import SolidJS.Basic (Component, Lazy, ModuleName, Resource)
-import SolidJS.Basic.Types (Children)
+import SolidJS.Basic.Types (Children, Element)
 import Type.Proxy (Proxy(..))
 import Unsafe.Coerce (unsafeCoerce)
-import Web.DOM (Element)
 
 type RouteData a
   = Effect a

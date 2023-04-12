@@ -1,6 +1,6 @@
-import { Show, createComponent, For } from 'solid-js';
+import { Show, createComponent, For, mergeProps } from 'solid-js';
 
-export const show = (when) => (fallback) => (children) => createComponent(Show, {
+export const show = (when) => (fallback) => (children) => createComponent(Show, mergeProps({
   fallback,
   get children() {
     if (typeof children === 'function') {
@@ -18,17 +18,15 @@ export const show = (when) => (fallback) => (children) => createComponent(Show, 
     }
     return when || false;
   }
-});
+}));
 
-export const forEach = (each) => (fallback) => (children) => createComponent(For, {
+export const forEach = (each) => (fallback) => (children) => createComponent(For, mergeProps({
   get each() {
-    return typeof each === 'function' ? each() : each;
+    return typeof each === 'function' ? each() || false : each
   },
-  get fallback() {
-    return fallback || null;
-  },
+  fallback: fallback || null,
   children
-})
+}))
 
 export const toUndefined_ = (isJust) => (maybe) => {
   return isJust(maybe) ? maybe.value0 : undefined;

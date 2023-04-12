@@ -4,7 +4,8 @@ import {
   createEffect as _createEffect,
   createMemo as _createMemo,
   createResource as _cr,
-  lazy as lzy
+  lazy as lzy,
+  mergeProps
 } from 'solid-js';
 
 export const transformObject = (obj, children) => {
@@ -13,24 +14,12 @@ export const transformObject = (obj, children) => {
       if (typeof value === "object" && value.hasOwnProperty("memo") && typeof value.memo === "function") {
         Object.defineProperty(obj, key, {
           get: value.memo,
-          enumerable: true,
-          configurable: true
         });
       }
     }
   }
 
-  if (children) {
-    if (!obj) {
-      obj = {};
-    }
-    
-    Object.defineProperty(obj, "children", {
-      get: () => children,
-    });
-  }
-
-  return obj;
+  return mergeProps(obj, { children });
 }
 
 export const render = (componentFn) => (root) => () => _render(componentFn, root);
@@ -40,7 +29,10 @@ export const dynamic = (component) => (props) => (children) => _createComponent(
 export const createComponent = (comp) => (props) => _createComponent(comp, transformObject(props));
 export const createComponent_ = (comp) => _createComponent(comp);
 
-export const createComponentChildren = (comp) => (props) => (children) => _createComponent(comp, transformObject(props, children));
+export const createComponentChildren = (comp) => (props) => (children) => {
+  // console.log(comp, props, children);
+  return _createComponent(comp, transformObject(props, children))
+};
 
 export const createResource_ = (resourceFn) => {
   const [resource, mutRef] = _cr(resourceFn);

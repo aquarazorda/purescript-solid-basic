@@ -3,13 +3,13 @@ module Main where
 import Prelude hiding (div)
 import Components.Nav (nav)
 import Data.Generic.Rep (class Generic)
+import Frontend.Routes.Home as H
 import Frontend.Routes.Home.Data (storiesData)
 import Routing.Duplex (RouteDuplex', path, root)
 import Routing.Duplex.Generic as G
-import SolidJS.Basic (Component, createComponent, createComponent_)
-import SolidJS.Basic.Dom (text)
+import SolidJS.Basic (Component, createComponent_)
+import SolidJS.Basic.Dom (div, text)
 import SolidJS.Basic.Router (lazyRoute, route)
-import SolidJS.Basic.Start (outlet)
 import SolidJS.Basic.Start as S
 
 data Route
@@ -28,22 +28,20 @@ routes =
 
 router :: Component {}
 router _ =
-  createComponent_ do
-    pure
-      $ text
-          [ route
-              { path: "*all"
-              , lazy: lazyRoute "Home" storiesData
-              , children:
-                  [ route
-                      { path: "/:stories"
-                      }
-                  , route
-                      { path: "/"
-                      }
-                  ]
-              }
-          ]
+  route
+    { path: "*all"
+    , lazy: lazyRoute "Home" storiesData
+    -- , component: H.default
+    -- , data: storiesData
+    , children:
+        [ route
+            { path: "/:stories"
+            }
+        , route
+            { path: "/"
+            }
+        ]
+    }
 
 default :: Component {}
 default _ = do
@@ -68,23 +66,3 @@ default _ = do
             ]
         ]
     }
-
--- $ children \_ ->
---                         [ S.errorBoundary
---                             ( \_ ->
---                                 text "Error"
---                             )
---                             $ children \_ ->
---                                 [ S.routes
---                                     $ children \_ ->
---                                         [ route
---                                             { path: "/"
---                                             , component: HS.default
---                                             , data: homeRouteData
---                                             -- , lazy: lazyRoute "Home" homeRouteData
---                                             }
---                                         ]
---                                 -- [ router {}
---                                 -- ]
---                                 ]
---                         ]
