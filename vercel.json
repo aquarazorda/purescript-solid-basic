@@ -1,3 +1,5 @@
 {
-  "buildCommand": "npm install & spago install & spago build & npm run build"
+  
+  "buildCommand": "spago build && npm run build",
+  "installCommand": "npm install && spago install"
 }
